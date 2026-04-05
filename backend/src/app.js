@@ -11,7 +11,7 @@ const app = express();
 // Standard Middleware
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // Replace with your frontend URL
+    origin: "*", // Replace with your frontend URL
     credentials: true, // Allows cookies to be sent
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
