@@ -8,8 +8,6 @@ const videoRoutes = require("./routes/videoRoutes");
 
 const app = express();
 
-const cors = require("cors");
-
 const allowedOrigins = [
   "https://video-stream-app-frontend.netlify.app", // Your Netlify URL
   "http://localhost:5173", // For local development
