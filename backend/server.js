@@ -11,27 +11,10 @@ connectDB();
 // 2. Create HTTP Server
 const server = http.createServer(app);
 
-const allowedOrigins = [
-  "https://video-stream-app-frontend.netlify.app",
-  "http://localhost:5173",
-];
-
-const io = new Server(server, {
-  cors: {
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS Blocked by Socket.io Registry"));
-      }
-    },
-    credentials: true,
-  },
-});
 // 3. Setup WebSockets
-// const io = new Server(server, {
-//   cors: { origin: "*", credentials: true }, // Use specific origin for cookies
-// });
+const io = new Server(server, {
+  cors: { origin: process.env.CLIENT_URL, credentials: true }, // Use specific origin for cookies
+});
 
 // 4. Initialize Modular Sockets
 app.set("socketio", io);
