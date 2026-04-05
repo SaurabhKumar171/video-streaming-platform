@@ -1,0 +1,17 @@
+PORT=8000
+NODE_ENV=development
+
+MONGO_URI=mongodb://127.0.0.1:27017/videoStreamApp
+
+JWT_SECRET=your_super_secure_jwt_secret
+JWT_EXPIRE=24h
+
+BCRYPT_SALT_ROUNDS=10
+
+CLIENT_URL=http://localhost:5173
+
+SERVER_URL=http://localhost:8000
+
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
