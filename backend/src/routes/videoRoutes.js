@@ -11,7 +11,6 @@ const {
   deleteVideo,
 } = require("../controllers/videoController");
 const { protect, authorize } = require("../middleware/auth");
-const cache = require("../middleware/cache");
 
 // Fix: Multer Storage Engine
 // const storage = multer.diskStorage({
