@@ -6,6 +6,8 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const videoRoutes = require("./routes/videoRoutes");
 
+require("dotenv").config();
+
 const app = express();
 
 // Standard Middleware
