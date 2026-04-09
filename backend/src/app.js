@@ -11,7 +11,8 @@ const app = express();
 // Standard Middleware
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // Replace with your frontend URL
+    // origin: process.env.CLIENT_URL, // Replace with your frontend URL
+    origin: "https://video-streaming-platform-sable.vercel.app",
     credentials: true, // Allows cookies to be sent
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
