@@ -22,9 +22,9 @@ exports.login = async (req, res) => {
     const cookieOptions = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
       httpOnly: true, // Prevents JS access (Security!)
-      secure: isProduction, // true in prod, false in local
+      secure: isProduction ? true : false, // true in prod, false in local
       sameSite: isProduction ? "None" : "Lax",
-      // path: "/",
+      path: "/",
     };
 
     res

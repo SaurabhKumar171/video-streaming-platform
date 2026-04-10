@@ -13,11 +13,11 @@ const server = http.createServer(app);
 
 // 3. Setup WebSockets
 const io = new Server(server, {
-  // cors: { origin: process.env.CLIENT_URL, credentials: true }, // Use specific origin for cookies
-  cors: {
-    origin: "https://video-streaming-platform-sable.vercel.app",
-    credentials: true,
-  },
+  cors: { origin: process.env.CLIENT_URL, credentials: true }, // Use specific origin for cookies
+  // cors: {
+  //   origin: "https://video-streaming-platform-sable.vercel.app",
+  //   credentials: true,
+  // },
 });
 
 // 4. Initialize Modular Sockets
