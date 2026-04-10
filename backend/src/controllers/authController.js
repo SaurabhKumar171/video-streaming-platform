@@ -16,14 +16,15 @@ exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
     const { token, user } = await authService.loginUser(username, password);
+    const isProduction = process.env.NODE_ENV === "production";
 
     // Set Cookie Options
     const cookieOptions = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
       httpOnly: true, // Prevents JS access (Security!)
-      // secure: false, // Set to false for localhost/HTTP
-      // sameSite: "lax", // Required for cross-origin cookies in modern browsers
-      // path: "/",
+      secure: isProduction ? true : false, // true in prod, false in local
+      sameSite: isProduction ? "None" : "Lax",
+      path: "/",
     };
 
     res

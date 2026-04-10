@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const healthRoutes = require("./routes/healthRoutes");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const videoRoutes = require("./routes/videoRoutes");
@@ -12,6 +13,7 @@ const app = express();
 app.use(
   cors({
     origin: process.env.CLIENT_URL, // Replace with your frontend URL
+    // origin: "https://video-streaming-platform-sable.vercel.app",
     credentials: true, // Allows cookies to be sent
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -30,6 +32,7 @@ app.use(
 );
 
 // Versioned Modular Routes
+app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/videos", videoRoutes);
