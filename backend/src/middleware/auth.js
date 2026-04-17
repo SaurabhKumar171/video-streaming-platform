@@ -10,6 +10,12 @@ exports.protect = (req, res, next) => {
 
     // Attach organizationId to the request object
     req.user = decoded;
+
+    // Update the logger with the organization context ---
+    if (req.user.organizationId) {
+      req.log = req.log.child({ organizationId: req.user.organizationId });
+    }
+
     next();
   } catch (error) {
     res.status(401).json({ message: "Token invalid" });

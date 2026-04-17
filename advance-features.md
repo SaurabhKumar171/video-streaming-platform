@@ -1,98 +1,56 @@
+Here is the strategic sequence for your development, the engineering justification, and your research syllabus.
 
-------------------------------------------------------------------------
+🏗️ Phase 1: The "Observability" Layer
+Why First? You cannot optimize what you cannot measure. Before adding complex distributed logic, you need to see your current system's performance baseline. If a feature in Phase 2 breaks the app, Phase 1 tells you exactly where.
 
-# 🛠️ Advanced Engineering Roadmap (FAANG-Level Upgrades)
+Research Topics:
 
-These upcoming features demonstrate **Scalability, Reliability, and
-Observability**.
+Structured Logging: Difference between console.log and JSON logging (Winston/Pino).
 
-------------------------------------------------------------------------
+The Four Golden Signals: Latency, Traffic, Errors, and Saturation.
 
-### 1. 🔔 Event-Driven Consistency (Webhooks)
+Prometheus vs. ELK Stack: Pull-based vs. Push-based monitoring.
 
--   Replace polling with Cloudinary Webhook Listener
--   Backend endpoint: `/api/v1/webhooks`
--   Enables **eventual consistency**
+Action: Implement a /metrics endpoint and structured logging that includes organizationId in every log entry.
 
-👉 Why: Non-blocking architecture & real-time updates
+🛠️ Phase 2: The "Asynchronous Depth" Layer (Task Queues)
+Why Second? Now that you can monitor the system, you'll notice that heavy AI analysis during the upload request increases Latency. Moving this to a background worker is the most significant architectural shift you can make.
 
-------------------------------------------------------------------------
+Research Topics:
 
-### 2. 🗄️ Database Performance & Indexing
+Message Queues: Redis-backed queues (BullMQ) vs. AMQP (RabbitMQ).
 
--   Compound Index:
+Producer/Consumer Pattern: How to decouple the API from the Worker.
 
-```{=html}
-<!-- -->
-```
-    { organizationId: 1, isFlagged: 1, createdAt: -1 }
+Eventual Consistency: Handling the delay between "Upload Finished" and "Analysis Finished."
 
--   Optimizes queries for large datasets
+Action: Move the analyzeVideo function out of the controller and into a BullMQ Worker.
 
-👉 Why: Improves **query performance & scan efficiency**
+🛡️ Phase 3: The "Resilience" Layer (Fault Tolerance)
+Why Third? Distributed systems (Phase 2) introduce more points of failure (Network, Redis, Workers). Now you must protect the "Main API" from these "Background Failures."
 
-------------------------------------------------------------------------
+Research Topics:
 
-### 3. 🔁 Resilience & Fault Tolerance
+The Circuit Breaker Pattern: Preventing cascading failures when a service hangs.
 
--   Retry mechanism with exponential backoff
--   Dead-letter queue for failed jobs
+Exponential Backoff: Why retrying immediately is bad (Thundering Herd problem).
 
-👉 Why: Prevents stuck "processing" states
+Idempotency: Ensuring that retrying a task doesn't create duplicate data.
 
-------------------------------------------------------------------------
+Action: Wrap your Cloudinary and Database calls in a Circuit Breaker (using a library like opossum).
 
-### 4. 🔐 Row-Level Security (RLS)
+⚖️ Phase 4: The "Security & Scale" Layer
+Why Last? Advanced multi-tenancy (Rate Limiting per Org) is an optimization for high traffic. Once your system is asynchronous (Phase 2) and resilient (Phase 3), you apply these rules to ensure "Noisy Neighbors" don't eat up all your resources.
 
--   Mongoose pre-query middleware
--   Auto-inject `organizationId` filter
+Research Topics:
 
-👉 Why: Prevents accidental data leaks
+Token Bucket vs. Leaky Bucket: Algorithms for rate limiting.
 
-------------------------------------------------------------------------
+Middleware-level RLS: Automatically injecting filters into Mongoose queries.
 
-### 5. 📊 Structured Observability
+Resource Quotas: Capping the total storage/upload count per organizationId.
 
--   JSON logging with Winston/Pino
--   Request tracing using unique IDs
+Action: Implement a dynamic rate-limiter that checks the user's organizationId and limits them to X uploads per hour.
 
-👉 Why: Faster debugging & reduced MTTR
 
-------------------------------------------------------------------------
 
-# 🏗️ Technical Architecture
-
-    User → Frontend (React)
-    Frontend → Backend (Express + JWT)
-    Backend → Cloudinary (Video Processing)
-    Backend → MongoDB (Metadata)
-    Cloudinary → Backend (Webhook Callback)
-    Backend → Frontend (Socket.io)
-
-------------------------------------------------------------------------
-## 🧪 Testing
-
-1.  Start backend\
-2.  Start frontend\
-3.  Upload videos\
-4.  Stream videos
-
-------------------------------------------------------------------------
-
-## 📚 Research Topics
-
--   Difference between Compound vs Single Indexes\
--   CORS Preflight vs POST\
--   Webhooks vs Polling\
--   Stateless Architecture Benefits
-
-------------------------------------------------------------------------
-
-## 🎯 Interview Tip
-
-Focus on **WHY decisions were made**: - Used Webhooks → non-blocking
-system\
-- Used indexing → scalable queries\
-- Used retry logic → fault tolerance
-
-------------------------------------------------------------------------
