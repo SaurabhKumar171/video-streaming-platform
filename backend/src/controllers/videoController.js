@@ -108,7 +108,7 @@ async function analyzeVideo(video, io, userId) {
     video.sensitivityScore = randomScore;
     video.isFlagged = randomScore > 75;
 
-    // 🔥 FIX: Using 'completed' to match your Schema Enum
+    // Using 'completed' to match your Schema Enum
     video.status = "completed";
 
     await video.save();
