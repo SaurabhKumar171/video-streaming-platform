@@ -75,7 +75,12 @@ exports.getMe = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("GET_ME_ERROR:", error); // Check your terminal for this log!
+    logger.error({
+      msg: "GET_ME_ERROR",
+      message: error.message,
+      stack: error.stack,
+    });
+
     res.status(500).json({ message: "Server error during session check" });
   }
 };

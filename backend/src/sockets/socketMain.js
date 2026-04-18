@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-const cookie = require("cookie"); // Import this!
+const cookie = require("cookie");
+const logger = require("../config/logger");
 
 module.exports = (io) => {
   io.use((socket, next) => {
@@ -14,9 +15,15 @@ module.exports = (io) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       socket.user = decoded;
+
       next();
     } catch (err) {
-      console.error("Socket Auth Error:", err.message);
+      logger.error({
+        msg: "Socket Auth Error",
+        message: err.message,
+        stack: err.stack,
+      });
+
       next(new Error("Unauthorized"));
     }
   });
@@ -24,10 +31,10 @@ module.exports = (io) => {
   io.on("connection", (socket) => {
     const userId = socket.user.id;
     socket.join(userId.toString());
-    console.log(`📡 User ${userId} connected to private room`);
+    logger.info(`User ${userId} connected to private room`);
 
     socket.on("disconnect", () => {
-      console.log(`User ${userId} disconnected`);
+      logger.info(`User ${userId} disconnected`);
     });
   });
 };

@@ -1,14 +1,34 @@
 const mongoose = require("mongoose");
+const logger = require("../config/logger");
 
 const connectDB = async () => {
   try {
-    console.log("MONGO_URI:", process.env.MONGO_URI ? "FOUND" : "MISSING");
+    if (!process.env.MONGO_URI) {
+      logger.error({ msg: "MONGO_URI is not defined in environment" });
+      process.exit(1);
+    }
 
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    logger.info({
+      msg: "MONGO_URI status",
+      status: "FOUND",
+    });
 
-    console.log(`MongoDB Connected`);
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+    });
+
+    logger.info({
+      msg: "MongoDB Connected",
+      host: conn.connection.host,
+      dbName: conn.connection.name,
+    });
   } catch (error) {
-    console.error("Database connection failed:", error.message);
+    logger.error({
+      msg: "Database connection failed",
+      message: error.message,
+      stack: error.stack,
+    });
+
     process.exit(1);
   }
 };

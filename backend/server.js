@@ -4,6 +4,7 @@ const { Server } = require("socket.io");
 const connectDB = require("./src/config/db");
 const app = require("./src/app"); // Import the configured app
 const socketHandler = require("./src/sockets/socketMain");
+const logger = require("./src/config/logger");
 
 // 1. Connect to Database
 connectDB();
@@ -23,7 +24,7 @@ socketHandler(io);
 // 5. Start Listening
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(
+  logger.info(
     `Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`,
   );
 });
