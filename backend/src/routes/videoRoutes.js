@@ -12,18 +12,6 @@ const {
 } = require("../controllers/videoController");
 const { protect, authorize } = require("../middleware/auth");
 
-// Fix: Multer Storage Engine
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "uploads/");
-//   },
-//   filename: (req, file, cb) => {
-//     // Keeps original extension: 1712345678-myvideo.mp4
-//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-//     cb(null, uniqueSuffix + path.extname(file.originalname));
-//   },
-// });
-
 router.get("/", protect, authorize("viewer", "editor", "admin"), getVideos);
 router.get(
   "/stream/:id",
