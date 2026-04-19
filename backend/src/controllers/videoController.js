@@ -1,9 +1,9 @@
 const Video = require("../models/Video");
 const fs = require("fs");
 const path = require("path");
-// const ffmpeg = require("fluent-ffmpeg");
-// const { compressVideo } = require("../utils/transcoder");
 const { cloudinary } = require("../config/cloudinary");
+const { videoQueue } = require("../queues/videoQueue");
+const { JOBS } = require("../config/constants");
 
 exports.uploadVideo = async (req, res) => {
   try {
@@ -22,7 +22,7 @@ exports.uploadVideo = async (req, res) => {
     }
 
     const cloudUrl = req.file.path;
-    // Cloudinary 'filename' is actually the public_id (e.g., 'v-stream/video_123')
+    // Cloudinary 'filename' is actually the public_id
     const publicId = req.file.filename;
 
     // 2. Optimized Metadata Extraction
@@ -58,18 +58,29 @@ exports.uploadVideo = async (req, res) => {
     });
 
     // 4. Trigger Background AI Analysis
-    analyzeVideo(video, io, req.user.id).catch((err) =>
-      console.error("Background Analysis Pipeline Error:", err),
+    // analyzeVideo(video, io, req.user.id).catch((err) =>
+    //   console.error("Background Analysis Pipeline Error:", err),
+    // );
+
+    await videoQueue.add(JOBS.ANALYZE_VIDEO, {
+      videoId: video._id,
+      userId: req.user.id,
+      organizationId: req.user.organizationId,
+    });
+
+    req.log.info(
+      { videoId: video._id },
+      "Video queued for background analysis",
     );
 
     res.status(201).json({
       success: true,
-      message: "Asset synchronized with global CDN.",
+      message: "Asset synchronized. Background analysis queued.",
       data: video,
     });
   } catch (error) {
-    console.error("Senior Controller Exception:", error);
-    res.status(500).json({ message: "Internal server synchronization error." });
+    req.log.error(error, "Controller Exception");
+    res.status(500).json({ message: "Internal server error." });
   }
 };
 
