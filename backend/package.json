@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "concurrently \"node server.js\" \"node src/workers/videoWorker.js\"",
     "dev": "nodemon server.js",
     "worker": "node src/workers/videoWorker.js"
   },
@@ -20,6 +20,7 @@
     "bcryptjs": "^3.0.3",
     "bullmq": "^5.74.1",
     "cloudinary": "^2.9.0",
+    "concurrently": "^9.2.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.0",
     "express": "^5.2.1",
