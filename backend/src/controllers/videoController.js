@@ -4,26 +4,49 @@ const path = require("path");
 const { cloudinary } = require("../config/cloudinary");
 const { videoQueue } = require("../queues/videoQueue");
 const { JOBS } = require("../config/constants");
+const { cloudinaryBreaker } = require("../config/cloudinary");
 
 exports.uploadVideo = async (req, res) => {
   try {
     const { title, description, category } = req.body;
-    const io = req.app.get("socketio");
 
-    // 1. Strict Cloudinary Check
-    if (!req.file || !req.file.path.startsWith("http")) {
-      console.error(
-        "STORAGE ERROR: File was saved locally or upload to Cloudinary failed.",
-      );
-      return res.status(400).json({
-        message:
-          "Cloud storage synchronization failed. Ensure Cloudinary credentials are correct.",
-      });
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+
+    // 1. Fire the Breaker
+    let uploadResult;
+    try {
+      // Pass the file buffer into the breaker
+      uploadResult = await cloudinaryBreaker.fire(req.file.buffer);
+    } catch (err) {
+      if (err.code === "EOPENBREAKER") {
+        req.log.warn("Upload rejected by Circuit Breaker");
+        return res.status(503).json({
+          message:
+            "Upload service is temporarily unavailable. Cloudinary is struggling.",
+        });
+      }
+      throw err;
     }
 
-    const cloudUrl = req.file.path;
-    // Cloudinary 'filename' is actually the public_id
-    const publicId = req.file.filename;
+    const cloudUrl = uploadResult.secure_url;
+    const publicId = uploadResult.public_id;
+
+    // const io = req.app.get("socketio");
+
+    // // 1. Strict Cloudinary Check
+    // if (!req.file || !req.file.path.startsWith("http")) {
+    //   console.error(
+    //     "STORAGE ERROR: File was saved locally or upload to Cloudinary failed.",
+    //   );
+    //   return res.status(400).json({
+    //     message:
+    //       "Cloud storage synchronization failed. Ensure Cloudinary credentials are correct.",
+    //   });
+    // }
+
+    // const cloudUrl = req.file.path;
+    // // Cloudinary 'filename' is actually the public_id
+    // const publicId = req.file.filename;
 
     // 2. Optimized Metadata Extraction
     const autoThumbnail = cloudUrl
@@ -79,7 +102,7 @@ exports.uploadVideo = async (req, res) => {
       data: video,
     });
   } catch (error) {
-    req.log.error(error, "Controller Exception");
+    req.log.error(error, "Upload Controller Failed");
     res.status(500).json({ message: "Internal server error." });
   }
 };

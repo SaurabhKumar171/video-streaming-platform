@@ -30,6 +30,7 @@
     "mongoose": "^9.4.1",
     "multer": "^2.1.1",
     "multer-storage-cloudinary": "^4.0.0",
+    "opossum": "^5.0.1",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
     "prom-client": "^15.1.3",
