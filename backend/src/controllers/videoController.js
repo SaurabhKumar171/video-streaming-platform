@@ -31,23 +31,6 @@ exports.uploadVideo = async (req, res) => {
     const cloudUrl = uploadResult.secure_url;
     const publicId = uploadResult.public_id;
 
-    // const io = req.app.get("socketio");
-
-    // // 1. Strict Cloudinary Check
-    // if (!req.file || !req.file.path.startsWith("http")) {
-    //   console.error(
-    //     "STORAGE ERROR: File was saved locally or upload to Cloudinary failed.",
-    //   );
-    //   return res.status(400).json({
-    //     message:
-    //       "Cloud storage synchronization failed. Ensure Cloudinary credentials are correct.",
-    //   });
-    // }
-
-    // const cloudUrl = req.file.path;
-    // // Cloudinary 'filename' is actually the public_id
-    // const publicId = req.file.filename;
-
     // 2. Optimized Metadata Extraction
     const autoThumbnail = cloudUrl
       .replace(/\.[^/.]+$/, ".jpg")
@@ -79,11 +62,6 @@ exports.uploadVideo = async (req, res) => {
         ),
       },
     });
-
-    // 4. Trigger Background AI Analysis
-    // analyzeVideo(video, io, req.user.id).catch((err) =>
-    //   console.error("Background Analysis Pipeline Error:", err),
-    // );
 
     await videoQueue.add(JOBS.ANALYZE_VIDEO, {
       videoId: video._id,
