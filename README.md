@@ -1,6 +1,6 @@
 # 🎬 V-Stream: Cloud-Native Multi-Tenant Media Engine
 
-> **A production-grade video ingestion pipeline engineered across 4 iterative phases — scaling from a fragile monolith to a resilient, observable, and multi-tenant distributed system.**
+**A production-grade video ingestion pipeline engineered across 4 iterative phases — scaling from a fragile monolith to a resilient, observable, and multi-tenant distributed system.**
 
 Built to solve real engineering bottlenecks: event loop saturation, cascading network failures, thundering herds, and noisy neighbor resource drain.
 
