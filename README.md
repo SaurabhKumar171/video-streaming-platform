@@ -307,4 +307,4 @@ npm run test:load
 
 **Saurabh Kumar Jha** — Backend Engineer focused on distributed systems, high-throughput pipelines, and production-resilient architecture.
 
-[LinkedIn](#) · [GitHub](#)
+[LinkedIn](https://www.linkedin.com/in/saurabhkumar171/) · [GitHub](https://github.com/SaurabhKumar171)
