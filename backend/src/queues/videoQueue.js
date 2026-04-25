@@ -8,10 +8,10 @@ const VIDEO_QUEUE = QUEUES.VIDEO;
 const videoQueue = new Queue(VIDEO_QUEUE, {
   connection,
   defaultJobOptions: {
-    attempts: 3,
+    attempts: 5,
     backoff: {
       type: "exponential",
-      delay: 5000, // Wait 5s, then 10s, then 20s...
+      delay: 5000, // Wait 5s, then 10s, then 20s... => delay * 2 ^ (attempt - 1)
     },
     removeOnComplete: true, // Keep Redis clean
   },

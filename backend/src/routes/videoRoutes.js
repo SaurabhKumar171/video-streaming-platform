@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-// const multer = require("multer");
-// const path = require("path");
 const { upload } = require("../config/cloudinary");
 const {
   uploadVideo,
@@ -11,6 +9,7 @@ const {
   deleteVideo,
 } = require("../controllers/videoController");
 const { protect, authorize } = require("../middleware/auth");
+const { orgRateLimitMiddleware } = require("../middleware/rateLimiter");
 
 router.get("/", protect, authorize("viewer", "editor", "admin"), getVideos);
 router.get(
@@ -24,6 +23,7 @@ router.post(
   "/upload",
   protect,
   authorize("editor", "admin"),
+  orgRateLimitMiddleware,
   upload.single("video"),
   uploadVideo,
 );
