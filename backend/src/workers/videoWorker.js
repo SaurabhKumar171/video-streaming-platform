@@ -32,6 +32,15 @@ const startWorker = async () => {
         const video = await Video.findById(videoId);
         if (!video) throw new Error("Video not found");
 
+        // --- IDEMPOTENCY GATEKEEPER ---
+        // If a retry happens but the DB already shows completion, stop immediately.
+        if (video.status === "completed") {
+          workerLog.info(
+            "Job already processed in previous attempt. Skipping.",
+          );
+          return { skipped: true, reason: "already_completed" };
+        }
+
         // Simulated AI Steps
         const analysisSteps = [
           { p: 30, s: "Scanning frames..." },

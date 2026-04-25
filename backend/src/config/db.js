@@ -13,9 +13,13 @@ const connectDB = async () => {
       status: "FOUND",
     });
 
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
+    const options = {
       serverSelectionTimeoutMS: 5000,
-    });
+      // Mongoose handles reconnection by default, but these help:
+      heartbeatFrequencyMS: 10000,
+    };
+
+    const conn = await mongoose.connect(process.env.MONGO_URI, options);
 
     logger.info({
       msg: "MongoDB Connected",
