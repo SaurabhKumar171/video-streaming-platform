@@ -1,21 +1,23 @@
-# V-Stream: Cloud-Native Multi-Tenant Media Engine
+# 🎬 V-Stream: Cloud-Native Multi-Tenant Media Engine
 
-> **A production-grade video ingestion and streaming pipeline engineered across 4 iterative phases — from a fragile monolith to a resilient, observable, multi-tenant distributed system.**
+> **A production-grade video ingestion pipeline engineered across 4 iterative phases — scaling from a fragile monolith to a resilient, observable, and multi-tenant distributed system.**
 
-Built to solve real engineering problems: event loop saturation, cascading failures, thundering herd, noisy neighbor, and duplicate processing at scale.
+Built to solve real engineering bottlenecks: event loop saturation, cascading network failures, thundering herds, and noisy neighbor resource drain.
+
+**Tech Stack:** Node.js, Express, BullMQ, Redis, PostgreSQL/MongoDB, Cloudinary, Prometheus, Grafana.
 
 ---
 
-## The Engineering Journey (TL;DR for Recruiters)
+## 🚀 The Engineering Journey (TL;DR)
 
-This project wasn't built all at once. It was **deliberately evolved** through 4 engineering phases — each solving a real production problem identified through measurement, not assumption.
+This system was deliberately evolved through 4 engineering phases. Every architectural decision was driven by load-test metrics, ensuring maximum resource efficiency and a 99.9% fail-fast uptime for the end user.
 
-| Phase | Problem Solved | Key Pattern |
-|---|---|---|
-| **1 — Observability** | Flying blind in production | Structured logging, Prometheus metrics, load profiling |
-| **2 — Async Architecture** | Event loop saturation at 100 concurrent users | BullMQ job queue, decoupled worker processes |
-| **3 — Resilience** | Cascading failures from external services | Circuit breakers, exponential backoff, idempotency |
-| **4 — Multi-Tenancy & Rate Limiting** | Noisy neighbor, unbounded resource usage | Redis-backed org-level token bucket rate limiting |
+| Phase | Bottleneck Solved | Engineering Implementation |
+| :--- | :--- | :--- |
+| **1. Observability** | Flying blind in production | Pino structured logging, Prometheus metrics, Autocannon load profiling |
+| **2. Async Architecture** | Event loop blocked at 100 concurrents | BullMQ job queue, decoupled Node.js worker processes |
+| **3. Resilience** | Cascading failures from CDN/DB | Opossum circuit breakers, exponential backoff, idempotency checks |
+| **4. Scale & Security** | Noisy neighbor / Unbounded usage | Redis-backed token bucket rate limiting (Org-level isolation) |
 
 ---
 
