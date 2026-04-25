@@ -234,34 +234,56 @@ graph TD
 
 ```env
 PORT=8000
-NODE_ENV=development
+NODE_ENV=development        # or production
 
-MONGO_URI=your_db_uri
-REDIS_URI=redis://localhost:6379
+# Database
+MONGO_URI=mongodb://127.0.0.1:27017/videoStreamApp
 
 CLOUDINARY_CLOUD_NAME=your_name
 CLOUDINARY_API_KEY=your_key
 CLOUDINARY_API_SECRET=your_secret
+# Auth
+JWT_SECRET=your_super_secure_jwt_secret
+JWT_EXPIRE=24h
+BCRYPT_SALT_ROUNDS=10
 
-JWT_SECRET=your_super_secret_key
+# URLs
+CLIENT_URL=http://localhost:5173
+SERVER_URL=http://localhost:8000
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+# Logging
+LOG_LEVEL=info
+
+# Redis (local)
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+
+# Redis (production — uncomment and set for Upstash)
+# NODE_ENV=production
+# REDIS_URL=your_upstash_redis_url
 ```
 
 ### Run Services
 
 ```bash
 npm install
+# or if you hit peer dependency conflicts:
+npm install --legacy-peer-deps
 
-# API server
-npm run dev:api
-
-# Background worker (separate process)
-npm run dev:worker
-
-# Frontend
-cd frontend && npm run dev
+npm run start:all        # starts API server + worker process together
 ```
 
-### Load Testing
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ```bash
 npm run test:load
